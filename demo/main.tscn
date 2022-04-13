@@ -1,0 +1,159 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://decimated-knight.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://bin/gdarap.gdns" type="Script" id=2]
+[ext_resource path="res://Ground.gd" type="Script" id=3]
+
+[sub_resource type="PlaneMesh" id=1]
+size = Vector2( 10, 10 )
+subdivide_width = 3
+subdivide_depth = 3
+
+[node name="Main" type="Spatial"]
+
+[node name="ARAPMesh" type="MeshInstance" parent="."]
+mesh = ExtResource( 1 )
+material/0 = null
+script = ExtResource( 2 )
+pinned_indices = PoolIntArray( 0 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.976296, 0.21644, 0, -0.21644, 0.976296, 0, -0.25, 1.75 )
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 1 )
+shadow_enabled = true
+omni_range = 6.0
+
+[node name="Ground" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0 )
+mesh = SubResource( 1 )
+material/0 = null
+script = ExtResource( 3 )
+
+[node name="GUI" type="MarginContainer" parent="."]
+anchor_right = 1.0
+margin_bottom = 100.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI"]
+margin_right = 1024.0
+margin_bottom = 100.0
+
+[node name="Energy" type="HSplitContainer" parent="GUI/VBoxContainer"]
+visible = false
+margin_right = 1024.0
+margin_bottom = 16.0
+split_offset = 25
+
+[node name="Label" type="Label" parent="GUI/VBoxContainer/Energy"]
+margin_top = 1.0
+margin_right = 144.0
+margin_bottom = 15.0
+text = "           energy type"
+align = 2
+valign = 2
+
+[node name="HSlider" type="HSlider" parent="GUI/VBoxContainer/Energy"]
+margin_left = 156.0
+margin_right = 1024.0
+margin_bottom = 16.0
+max_value = 3.0
+value = 3.0
+
+[node name="YoungsModulus" type="HSplitContainer" parent="GUI/VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 16.0
+split_offset = 25
+
+[node name="Label" type="Label" parent="GUI/VBoxContainer/YoungsModulus"]
+margin_top = 1.0
+margin_right = 143.0
+margin_bottom = 15.0
+text = "               rigidness"
+align = 2
+valign = 2
+
+[node name="HSlider" type="HSlider" parent="GUI/VBoxContainer/YoungsModulus"]
+margin_left = 155.0
+margin_right = 1024.0
+margin_bottom = 16.0
+min_value = 0.995
+max_value = 1.005
+step = 0.001
+value = 1.0
+
+[node name="Gravity" type="HSplitContainer" parent="GUI/VBoxContainer"]
+margin_top = 20.0
+margin_right = 1024.0
+margin_bottom = 36.0
+split_offset = 25
+
+[node name="Label" type="Label" parent="GUI/VBoxContainer/Gravity"]
+margin_top = 1.0
+margin_right = 143.0
+margin_bottom = 15.0
+text = "                   gravity"
+align = 2
+valign = 2
+
+[node name="HSlider" type="HSlider" parent="GUI/VBoxContainer/Gravity"]
+margin_left = 155.0
+margin_right = 1024.0
+margin_bottom = 16.0
+max_value = 20.0
+step = 0.01
+value = 10.0
+
+[node name="GroundHeight" type="HSplitContainer" parent="GUI/VBoxContainer"]
+margin_top = 40.0
+margin_right = 1024.0
+margin_bottom = 56.0
+split_offset = 25
+
+[node name="Label" type="Label" parent="GUI/VBoxContainer/GroundHeight"]
+margin_top = 1.0
+margin_right = 141.0
+margin_bottom = 15.0
+text = "       ground height"
+align = 2
+valign = 2
+
+[node name="HSlider" type="HSlider" parent="GUI/VBoxContainer/GroundHeight"]
+margin_left = 153.0
+margin_right = 1024.0
+margin_bottom = 16.0
+min_value = -1.5
+max_value = -0.5
+step = 0.01
+value = -1.0
+
+[node name="CoR" type="HSplitContainer" parent="GUI/VBoxContainer"]
+visible = false
+margin_top = 60.0
+margin_right = 1024.0
+margin_bottom = 76.0
+split_offset = 25
+
+[node name="Label" type="Label" parent="GUI/VBoxContainer/CoR"]
+margin_top = 1.0
+margin_right = 143.0
+margin_bottom = 15.0
+text = "coeff of restitution"
+align = 2
+valign = 2
+
+[node name="HSlider" type="HSlider" parent="GUI/VBoxContainer/CoR"]
+margin_left = 155.0
+margin_right = 1024.0
+margin_bottom = 16.0
+min_value = 0.5
+max_value = 1.7
+step = 0.01
+value = 1.1
+
+[connection signal="value_changed" from="GUI/VBoxContainer/Energy/HSlider" to="ARAPMesh" method="_on_E_value_changed"]
+[connection signal="value_changed" from="GUI/VBoxContainer/YoungsModulus/HSlider" to="ARAPMesh" method="_on_YM_value_changed"]
+[connection signal="value_changed" from="GUI/VBoxContainer/Gravity/HSlider" to="ARAPMesh" method="_on_G_value_changed"]
+[connection signal="value_changed" from="GUI/VBoxContainer/GroundHeight/HSlider" to="ARAPMesh" method="_on_GH_value_changed"]
+[connection signal="value_changed" from="GUI/VBoxContainer/GroundHeight/HSlider" to="Ground" method="_on_GH_value_changed"]
+[connection signal="value_changed" from="GUI/VBoxContainer/CoR/HSlider" to="ARAPMesh" method="_on_CoR_value_changed"]
